@@ -8,7 +8,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
     """
     stations = {}
     last_timestamp = None
-    
+
     for event in events:
         message_type = event.get("type")
 
@@ -17,7 +17,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
             timestamp = event["timestamp"]
             temperature = event["temperature"]
             last_timestamp = timestamp
-            
+
             # update station data
             if station_name not in stations:
                 stations[station_name] = {"high": temperature, "low": temperature}
@@ -27,7 +27,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
 
         elif message_type == "control":
             command = event.get("command")
-            
+
             if command == "snapshot":
                 if last_timestamp is not None:
                     yield {
@@ -35,7 +35,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                         "asOf": last_timestamp,
                         "stations": dict(stations) # copy
                     }
-                    
+
             elif command == "reset":
                 if last_timestamp is not None:
                     yield {
@@ -43,10 +43,10 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                         "asOf": last_timestamp
                     }
                     stations.clear()
-                    
+
             else:
                 raise ValueError(f"Unknown control command: {command}")
-                
+
         else:
             raise ValueError(f"Unknown message type: {message_type}")
         

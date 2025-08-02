@@ -16,7 +16,7 @@ def test_single_sample_snapshot():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
 
     assert len(results) == 1
@@ -55,9 +55,9 @@ def test_multiple_samples_same_station():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
-    
+
     assert len(results) == 1
     assert results[0] == {
         "type": "snapshot",
@@ -251,7 +251,7 @@ def test_as_of_timestamp_accuracy():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
     assert len(results) == 2
     assert results[0]["asOf"] == 1000
