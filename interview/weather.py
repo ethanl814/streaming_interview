@@ -1,26 +1,22 @@
 from typing import Any, Iterable, Generator
 
-
 def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any], None, None]:
     """
     Processes weather station events and control messages
     
-    Maintains state of weather stations (high/low temperatures) and responds
-    to control messages (snapshot/reset).
+    Maintains state of weather stations and responds to control messages
     """
-    stations = {} # {station_name: {"high": float, "low": float}}
-    last_timestamp = None # most recent timestamp
+    stations = {} 
+    last_timestamp = None 
     
     for event in events:
         message_type = event.get("type")
 
         if message_type == "sample":
-            # process weather sample
             station_name = event["stationName"]
             timestamp = event["timestamp"]
             temperature = event["temperature"]
-            
-            last_timestamp = timestamp # last timestamp
+            last_timestamp = timestamp 
             
             # update station data
             if station_name not in stations:
@@ -37,7 +33,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                     yield {
                         "type": "snapshot",
                         "asOf": last_timestamp,
-                        "stations": dict(stations)  # create copy
+                        "stations": dict(stations)  # copy
                     }
                     
             elif command == "reset":
@@ -46,7 +42,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                         "type": "reset",
                         "asOf": last_timestamp
                     }
-                    stations.clear() # clear all station data
+                    stations.clear() 
                     
             else:
                 raise ValueError(f"Unknown control command: {command}")
