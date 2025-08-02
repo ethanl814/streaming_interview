@@ -94,9 +94,9 @@ def test_multiple_stations():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
-    
+
     assert len(results) == 1
     assert results[0] == {
         "type": "snapshot",
@@ -132,9 +132,9 @@ def test_reset_command():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
-    
+
     assert len(results) == 2
     assert results[0] == {
         "type": "reset",
@@ -157,7 +157,7 @@ def test_snapshot_with_no_data():
             "command": "snapshot"
         }
     ]
-    
+
     results = list(weather.process_events(events))
     assert len(results) == 0
 
@@ -170,7 +170,7 @@ def test_reset_with_no_data():
             "command": "reset"
         }
     ]
-    
+
     results = list(weather.process_events(events))
     assert len(results) == 0
 
@@ -183,7 +183,7 @@ def test_unknown_message_type():
             "data": "something"
         }
     ]
-    
+
     with pytest.raises(ValueError, match="Unknown message type: unknown"):
         list(weather.process_events(events))
 
@@ -202,7 +202,7 @@ def test_unknown_control_command():
             "command": "unknown"
         }
     ]
-    
+
     with pytest.raises(ValueError, match="Unknown control command: unknown"):
         list(weather.process_events(events))
 

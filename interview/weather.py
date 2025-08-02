@@ -6,8 +6,8 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
     
     Maintains state of weather stations and responds to control messages
     """
-    stations = {} 
-    last_timestamp = None 
+    stations = {}
+    last_timestamp = None
     
     for event in events:
         message_type = event.get("type")
@@ -16,7 +16,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
             station_name = event["stationName"]
             timestamp = event["timestamp"]
             temperature = event["temperature"]
-            last_timestamp = timestamp 
+            last_timestamp = timestamp
             
             # update station data
             if station_name not in stations:
@@ -24,7 +24,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
             else:
                 stations[station_name]["high"] = max(stations[station_name]["high"], temperature)
                 stations[station_name]["low"] = min(stations[station_name]["low"], temperature)
-                
+
         elif message_type == "control":
             command = event.get("command")
             
@@ -33,7 +33,7 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                     yield {
                         "type": "snapshot",
                         "asOf": last_timestamp,
-                        "stations": dict(stations)  # copy
+                        "stations": dict(stations) # copy
                     }
                     
             elif command == "reset":
@@ -42,10 +42,11 @@ def process_events(events: Iterable[dict[str, Any]]) -> Generator[dict[str, Any]
                         "type": "reset",
                         "asOf": last_timestamp
                     }
-                    stations.clear() 
+                    stations.clear()
                     
             else:
                 raise ValueError(f"Unknown control command: {command}")
                 
         else:
             raise ValueError(f"Unknown message type: {message_type}")
+        
